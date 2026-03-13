@@ -107,8 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultArea.classList.add('hidden');
 
         try {
+            // Compress the image before uploading to avoid Cloudflare memory/timeout limits
+            const compressedBlob = await compressImage(currentFile);
             const formData = new FormData();
-            formData.append('image', currentFile);
+            formData.append('image', compressedBlob, 'image.jpg');
 
             const customPrompt = customPromptInput.value.trim();
             if (customPrompt) {
@@ -127,10 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            // Assume the AI responds with an object containing 'response' or directly a string.
-            // Often llava models return {"response": "..."} layout 
-            // We should safely parse it.
-            const resultText = data.response || JSON.stringify(data);
+            // Cloudflare AI llava model returns {"description": "..."}
+            // We safely parse it or fallback to JSON string
+            const resultText = data.description || data.response || JSON.stringify(data);
 
             resultContent.textContent = resultText;
             resultArea.classList.remove('hidden');
@@ -166,5 +167,39 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Failed to copy. Please try manually.');
         });
     });
+
+    // --- Image Compression --- //
+    async function compressImage(file, maxWidth = 800, maxHeight = 800) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width = width * ratio;
+                        height = height * ratio;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob((blob) => {
+                        resolve(blob || file);
+                    }, 'image/jpeg', 0.85);
+                };
+                img.onerror = () => resolve(file);
+            };
+            reader.onerror = () => resolve(file);
+        });
+    }
 
 });
