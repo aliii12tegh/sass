@@ -1,0 +1,13 @@
+# Node modules
+node_modules/
+backend/node_modules/
+
+# Wrangler
+.wrangler/
+backend/.wrangler/
+
+# System
+.DS_Store
+
+# Env
+.env

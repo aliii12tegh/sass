@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensi AI | Image to Description</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-aurora">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Sensi AI</span>
+            </div>
+            <h1>Transform Images into Words</h1>
+            <p>Upload any image, and our advanced AI will generate a highly detailed description.</p>
+        </header>
+
+        <section class="upload-section">
+            <div class="glass-panel main-panel">
+                
+                <div class="prompt-input-wrapper">
+                    <label for="customPrompt">Custom Prompt (Optional)</label>
+                    <input type="text" id="customPrompt" placeholder="e.g. Describe this image in detail..." autocomplete="off">
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/*" class="hidden-input">
+                    <div class="upload-content" id="uploadContent">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <h3>Drag & Drop your image here</h3>
+                        <p>or click to browse files</p>
+                        <span class="file-hint">Supports JPG, PNG, WEBP</span>
+                    </div>
+                    <div class="preview-container hidden" id="previewContainer">
+                        <img id="imagePreview" src="" alt="Image Preview">
+                        <button class="remove-btn" id="removeBtn" title="Remove image">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="generateBtn" class="primary-btn" disabled>
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Generate Description</span>
+                </button>
+            </div>
+            
+            <div class="result-area hidden" id="resultArea">
+                <div class="glass-panel result-panel">
+                    <div class="result-header">
+                        <h3><i class="fa-solid fa-align-left"></i> AI Generated Result</h3>
+                        <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="result-content" id="resultContent">
+                        <!-- Result will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Loading Overlay for the button action -->
+        <div class="loading-overlay hidden" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p>AI is analyzing the image...</p>
+        </div>
+
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
